@@ -4,4 +4,4 @@ This repository contains my solutions to [Coding Challenges](https://codingchall
 
 ## Challenges
 
-- [Word Count Tool](wctool/README.md): A command-line tool to count the number of lines, words, and characters in a file.
+- [Word Count Tool](wctool/): A command-line tool to count the number of lines, words, and characters in a file.
