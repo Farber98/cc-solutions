@@ -24,8 +24,9 @@ func newApp(rl RateLimiter) *app {
 func main() {
 	//tb := NewTokenBucket(10, 5*time.Second, 5*time.Minute)
 	//fw := NewFixedWindow(3, 20*time.Second)
-	slw := NewSlidingWindowLog(5, 10*time.Second)
-	app := newApp(slw)
+	// slw := NewSlidingWindowLog(5, 10*time.Second)
+	slwc := NewSlidingWindowLog(3, 5*time.Second)
+	app := newApp(slwc)
 
 	http.HandleFunc("/limited", func(w http.ResponseWriter, r *http.Request) {
 		ip, _, err := net.SplitHostPort(r.RemoteAddr)
