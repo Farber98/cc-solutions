@@ -11,7 +11,6 @@ type LoadBalancer interface {
 	healthCheck()
 	GetSvProxy() http.Handler
 	isAlive(*Server) bool
-	setup()
 }
 
 type Server struct {
