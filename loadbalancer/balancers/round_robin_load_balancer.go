@@ -16,8 +16,8 @@ type roundRobinLoadBalancer struct {
 	mu      sync.RWMutex
 }
 
-func NewRoundRobinLoadBalancer(svs []*Server, client *http.Client) *roundRobinLoadBalancer {
-	lb := &roundRobinLoadBalancer{servers: svs, client: client}
+func NewRoundRobinLoadBalancer(svs []*Server, clientTimeout, healthCheckTimeout time.Duration) LoadBalancer {
+	lb := &roundRobinLoadBalancer{servers: svs, client: &http.Client{Timeout: clientTimeout}}
 	for _, sv := range svs {
 		alive := lb.isAlive(sv)
 		sv.mu.Lock()
@@ -29,12 +29,12 @@ func NewRoundRobinLoadBalancer(svs []*Server, client *http.Client) *roundRobinLo
 			log.Printf("Initial health check: server %s is down", sv.url.String())
 		}
 	}
-	go lb.healthCheck()
+	go lb.healthCheck(healthCheckTimeout)
 	return lb
 }
 
-func (lb *roundRobinLoadBalancer) healthCheck() {
-	ticker := time.NewTicker(10 * time.Second)
+func (lb *roundRobinLoadBalancer) healthCheck(timeout time.Duration) {
+	ticker := time.NewTicker(timeout)
 	defer ticker.Stop()
 
 	for range ticker.C {
